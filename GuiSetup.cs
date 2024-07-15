@@ -18,10 +18,22 @@ namespace Otiosum
                 "button:hover { background-color: #ff6666; }"
             );
 
+
             // Create a Fixed container
             Fixed fixedContainer = new Fixed();
 
-            // Buttons
+            // Images
+            Image image = new Image("./assets/dummyAvatar.png");
+            fixedContainer.Put(image, 10, 10);
+
+            // Experience bar
+            ProgressBar experienceBar = new ProgressBar();
+            experienceBar.Fraction = 0.0;
+            experienceBar.SetSizeRequest(1280, 20);
+            experienceBar.StyleContext.AddProvider(cssProvider, uint.MaxValue);
+            fixedContainer.Put(experienceBar, 0, 700);
+
+            // Top bar buttons
             Button buttonSaveGame = new Button("Save Game");
             buttonSaveGame.SetSizeRequest(100, 50);
             buttonSaveGame.Clicked += OnButtonClicked;
@@ -40,18 +52,15 @@ namespace Otiosum
             Button buttonSaveAndExit = new Button("Save & Exit");
             buttonSaveAndExit.StyleContext.AddProvider(cssProvider, uint.MaxValue);
             buttonSaveAndExit.SetSizeRequest(100, 50);
-            buttonSaveAndExit.Clicked += OnButtonClicked;
+            buttonSaveAndExit.Clicked += GameLogic.ButtonExitGame;
             fixedContainer.Put(buttonSaveAndExit, 1160, 10);
 
-            // Images
-            Image image = new Image("./assets/dummyAvatar.png");
-            fixedContainer.Put(image, 10, 10);
+            // Bottom bar buttons
+            Button buttonClicker = new Button("Harvest Soul");
+            buttonClicker.SetSizeRequest(1040, 80);
+            buttonClicker.Clicked += (sender, e) => GameLogic.ButtonHarvestSoul(experienceBar);
+            fixedContainer.Put(buttonClicker, 220, 620);
 
-            // Experience bar
-            ProgressBar experienceBar = new ProgressBar();
-            experienceBar.SetSizeRequest(1280, 20);
-            experienceBar.StyleContext.AddProvider(cssProvider, uint.MaxValue);
-            fixedContainer.Put(experienceBar, 0, 700);
 
             // Add the fixed container to the window
             window.Add(fixedContainer);
