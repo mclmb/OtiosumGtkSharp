@@ -18,7 +18,6 @@ namespace Otiosum
                 "button:hover { background-color: #ff6666; }"
             );
 
-
             // Create a Fixed container
             Fixed fixedContainer = new Fixed();
 
@@ -36,7 +35,7 @@ namespace Otiosum
             // Top bar buttons
             Button buttonSaveGame = new Button("Save Game");
             buttonSaveGame.SetSizeRequest(100, 50);
-            buttonSaveGame.Clicked += OnButtonClicked;
+            buttonSaveGame.Clicked += (sender, e) => GameLogic.ButtonSaveGame(experienceBar);
             fixedContainer.Put(buttonSaveGame, 220, 10);
 
             Button buttonFullStats = new Button("Statistics");

@@ -1,9 +1,36 @@
 using Gtk;
+using Newtonsoft.Json;
+
 
 namespace Otiosum
 {
     class GameLogic
     {
+        public static void ButtonSaveGame(ProgressBar experienceBar)
+        {
+            SaveState saveState = new SaveState
+            {
+                PlayerState = new PlayerState
+                {
+                    Souls = 0.0,
+                    Experience = Math.Round(experienceBar.Fraction, 2)
+                }
+            };
+
+            string json = JsonConvert.SerializeObject(saveState, Formatting.Indented);
+            File.WriteAllText("game_state.json", json);
+
+            MessageDialog dialog = new MessageDialog(
+                null,
+                DialogFlags.Modal,
+                MessageType.Info,
+                ButtonsType.Ok,
+                "Game saved successfully!");
+            dialog.Run();
+            dialog.Destroy();
+        }
+
+
         public static void ButtonExitGame(object? sender, System.EventArgs e)
         {
             MessageDialog dialog = new MessageDialog(
