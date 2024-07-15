@@ -6,8 +6,10 @@ namespace Otiosum
     }
     public class PlayerState
     {
-        public double Souls { get; set; }
         public double Experience { get; set; }
+        public int Level { get; set; }
+        public int Souls { get; set; }
+        public double SoulsPerMinute { get; set; }
     }
 
 }

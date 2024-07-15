@@ -6,19 +6,25 @@ namespace Otiosum
 {
     class GameLogic
     {
+        private static int level = 1;
+        private static int souls = 0;
+        private static double soulsPerMinute = 0;
+
         public static void ButtonSaveGame(ProgressBar experienceBar)
         {
             SaveState saveState = new SaveState
             {
                 PlayerState = new PlayerState
                 {
-                    Souls = 0.0,
-                    Experience = Math.Round(experienceBar.Fraction, 2)
+                    Experience = Math.Round(experienceBar.Fraction, 2),
+                    Level = level,
+                    Souls = souls,
+                    SoulsPerMinute = soulsPerMinute
                 }
             };
 
             string json = JsonConvert.SerializeObject(saveState, Formatting.Indented);
-            File.WriteAllText("game_state.json", json);
+            File.WriteAllText("gameData.json", json);
 
             MessageDialog dialog = new MessageDialog(
                 null,
@@ -57,28 +63,28 @@ namespace Otiosum
             dialog.Destroy();
         }
 
-        public static void ButtonHarvestSoul(ProgressBar experienceBar)
+        public static void ButtonHarvestSoul(ProgressBar experienceBar, Entry soulsEntry, Entry spmEntry, Entry levelEntry)
         {
+            // Increase experience bar by 0.1
             if (experienceBar.Fraction < 1.0)
             {
-                experienceBar.Fraction += 0.01;
+                experienceBar.Fraction += 0.1;
             }
-
-            if (experienceBar.Fraction >= 0.999)
+            else
             {
-                MessageDialog dialog = new MessageDialog(
-                    null,
-                    DialogFlags.Modal,
-                    MessageType.Info,
-                    ButtonsType.Ok,
-                    "You leveled up!"
-                );
-
-                dialog.Run();
-                dialog.Destroy();
-
+                // Level up when experience bar is full
                 experienceBar.Fraction = 0.0;
+                level++;
+                levelEntry.Text = level.ToString();
             }
+
+            // Update souls and souls per minute
+            souls += 10;
+            soulsPerMinute += 0.5; // Example value for souls per minute
+
+            // Update the Entry widgets
+            soulsEntry.Text = souls.ToString();
+            spmEntry.Text = soulsPerMinute.ToString("F2");
         }
     }
 }

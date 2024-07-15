@@ -4,6 +4,10 @@ namespace Otiosum
 {
     class GuiSetup
     {
+        private static Entry levelEntry;
+        private static Entry soulsEntry;
+        private static Entry spmEntry;
+
         public static void SetupWindow(Window window)
         {
             window.DeleteEvent += delegate { Application.Quit(); };
@@ -26,8 +30,10 @@ namespace Otiosum
             fixedContainer.Put(image, 10, 10);
 
             // Experience bar
-            ProgressBar experienceBar = new ProgressBar();
-            experienceBar.Fraction = 0.0;
+            ProgressBar experienceBar = new ProgressBar
+            {
+                Fraction = 0.0
+            };
             experienceBar.SetSizeRequest(1280, 20);
             experienceBar.StyleContext.AddProvider(cssProvider, uint.MaxValue);
             fixedContainer.Put(experienceBar, 0, 700);
@@ -57,12 +63,40 @@ namespace Otiosum
             // Bottom bar buttons
             Button buttonClicker = new Button("Harvest Soul");
             buttonClicker.SetSizeRequest(1040, 80);
-            buttonClicker.Clicked += (sender, e) => GameLogic.ButtonHarvestSoul(experienceBar);
+            buttonClicker.Clicked += (sender, e) => GameLogic.ButtonHarvestSoul(experienceBar, soulsEntry, spmEntry, levelEntry);
             fixedContainer.Put(buttonClicker, 220, 620);
 
+            // Create a grid for character stats
+            Grid statsGrid = new Grid();
+            statsGrid.RowSpacing = 10;
+            statsGrid.ColumnSpacing = 10;
+
+            // Add labels and disabled entries to the grid, with labels on top
+            levelEntry = AddStatRow(statsGrid, "Level:", "1", 0);
+            soulsEntry = AddStatRow(statsGrid, "Souls:", "0", 1);
+            spmEntry = AddStatRow(statsGrid, "Souls per Minute:", "0", 2);
+
+            // Add the stats grid to the fixed container
+            fixedContainer.Put(statsGrid, 20, 200);
 
             // Add the fixed container to the window
             window.Add(fixedContainer);
+        }
+
+        private static Entry AddStatRow(Grid grid, string labelText, string entryText, int row)
+        {
+            VBox vbox = new VBox();
+            Label label = new Label(labelText);
+            Entry entry = new Entry(entryText)
+            {
+                Sensitive = false,
+                Xalign = 0.5f  // Center align text
+            };
+            vbox.PackStart(label, false, false, 0);
+            vbox.PackStart(entry, false, false, 0);
+            grid.Attach(vbox, 0, row, 1, 1);
+
+            return entry; // Return the Entry widget
         }
 
         private static void OnButtonClicked(object? sender, EventArgs e)
