@@ -11,6 +11,13 @@ namespace Otiosum
             window.SetPosition(WindowPosition.Center);
             window.Resizable = false;
 
+            // Create a CSS provider
+            var cssProvider = new CssProvider();
+            cssProvider.LoadFromData(
+                "button { background-color: #ff0000; color: #ffffff; }" +
+                "button:hover { background-color: #ff6666; }"
+            );
+
             // Create a Fixed container
             Fixed fixedContainer = new Fixed();
 
@@ -31,17 +38,20 @@ namespace Otiosum
             fixedContainer.Put(buttonSettings, 440, 10);
 
             Button buttonSaveAndExit = new Button("Save & Exit");
-            var styleSaveAndExit = new CssProvider();
-            styleSaveAndExit.LoadFromData("button { background-color: #ff0000; color: #ffffff; } button:hover { background-color: #ff6666; }");
-            buttonSaveAndExit.StyleContext.AddProvider(styleSaveAndExit, uint.MaxValue);
+            buttonSaveAndExit.StyleContext.AddProvider(cssProvider, uint.MaxValue);
             buttonSaveAndExit.SetSizeRequest(100, 50);
             buttonSaveAndExit.Clicked += OnButtonClicked;
             fixedContainer.Put(buttonSaveAndExit, 1160, 10);
 
-
             // Images
             Image image = new Image("./assets/dummyAvatar.png");
             fixedContainer.Put(image, 10, 10);
+
+            // Experience bar
+            ProgressBar experienceBar = new ProgressBar();
+            experienceBar.SetSizeRequest(1280, 20);
+            experienceBar.StyleContext.AddProvider(cssProvider, uint.MaxValue);
+            fixedContainer.Put(experienceBar, 0, 700);
 
             // Add the fixed container to the window
             window.Add(fixedContainer);
